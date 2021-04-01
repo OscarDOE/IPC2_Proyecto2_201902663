@@ -38,4 +38,21 @@
 				**-*
 			</imagen>
 		</matriz>
+		<matriz>
+			<nombre>Ejemplo</nombre>
+			<filas>10</filas>
+			<columnas>10</columnas>
+			<imagen>
+				----------
+				-***-***--
+				--*--***--
+				--*--*----
+				-***-*----
+				----------
+				-***-***--
+				-*-----*--
+				-***-***--
+				----------
+			</imagen>
+		</matriz>
 	</matrices>

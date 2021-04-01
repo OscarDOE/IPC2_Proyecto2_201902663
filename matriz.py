@@ -428,8 +428,103 @@ class matriz:
                 a += 1
                 b -= 1  
 
-        pass
+        
+        else:
+            while a < b:
+                arriba = self.eColumnas.getEncabezado(a)
+                abajo = self.eColumnas.getEncabezado(b)
+                print("ARRIBA ANTES:",arriba.id)
+                print("ABAJO ANTES:",abajo.id)
+                aux = arriba.siguiente
+                aux2 = arriba.anterior
+                aux3 = abajo.siguiente
+                aux4 = abajo.anterior
+                
+                arriba.siguiente.anterior = abajo
+                rrcolumnas = self.eColumnas.primero
+                if arriba == self.eColumnas.primero:
+                    self.eColumnas.primero = abajo
+                    access = arriba.accesoNodo
+                    access2 = abajo.accesoNodo
+                    #while access != None:
+                        #if access == self.eColumnas.primero.accesoNodo:
+                           # self.eColumnas.primero.accesoNodo = access2
+                        #rrcolumnas.accesoNodo = access2
+                        #au1 = access.abajo
+                        #au2 = access2.arriba#
 
+                        #access.abajo.arriba = access2
+
+                        #access2.arriba.abajo = access
+                        #access.arriba = au2
+                        #access2.abajo = au1
+                        #access.abajo = None
+                        #access2.arriba = None
+                        #auxf = access.fila
+                        #access.fila = access2.fila
+                        #access2.fila = auxf                        
+                        #print("VVVVVVV  COLUMNA:",access.columna, "VVVVVV FILA:",access.fila)
+                        #print("BBBBBBB  COLUMNA:",access2.columna, "BBBBBB FILA:",access2.fila)
+                        #rrcolumnas = rrcolumnas.siguiente
+                        #access = access.derecha
+                        #access2 = access2.derecha
+                    print("ES PRiMERO")
+                else:
+                    arriba.anterior.siguiente = abajo
+                    #print(arriba.anterior.siguiente.id)    
+                if b == columnas:
+                    print("ES ULTIMO")
+                    pass
+                else:
+                    abajo.siguiente.anterior = arriba
+                abajo.anterior.siguiente = arriba
+
+                arriba.siguiente = abajo.siguiente
+
+                arriba.anterior = abajo.anterior
+
+                abajo.siguiente = aux
+
+                abajo.anterior = aux2
+
+                auxnum = arriba.id
+                arriba.id = abajo.id
+                abajo.id = auxnum
+                access = arriba.accesoNodo
+                access2 = abajo.accesoNodo
+                a += 1 
+                b -= 1   
+                print("ARRIBA:",arriba.id)
+                print("ABAJO:",abajo.id)
+              
+
+
+            print("ES IMPAR")
+    def Transpuesta(self,b):
+        eColumna = self.eColumnas.primero
+        a = []
+        c = []
+        print("\n****************************** Recorrido por Columnas ********************")
+        while eColumna != None:
+            actual = eColumna.accesoNodo      
+            x = eColumna.id      
+            print("\n Columna "+str(actual.columna))
+            print("Fila:  Valor                                    : id")
+            x = 0
+            while actual != None:
+                c.append(actual.valor)
+                c.append(actual.fila)
+                c.append(actual.columna)
+                a.append(c)
+                print(str(actual.fila)+"            "+actual.valor+"                   ")
+                actual = actual.abajo
+                c = []
+            b.append(a)
+            a = []
+            eColumna = eColumna.siguiente
+
+        print("\n****************************** Fin Recorrido por Columnas ********************")
+        return b
 '''
 m = matriz("nombre", 10, 10)
 m.insertar(1, 1, "A")

@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 from listamatrices import ListaMatrices
 from graphviz import Source
 from PIL import ImageTk, Image
+from tkinter import messagebox
 
 Matrices = ListaMatrices()
 Matrices_Mod = ListaMatrices()
@@ -408,11 +409,111 @@ def despues_operaciones2(Frame, combo):
         label.img = photo
         label.place(x=250,y=50)
         Matrices_Mod = Matrices
-        
+    elif operacion == 3:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        #actual.Vertical()
+        #actual.prueba()
+        mensaje = '''digraph grafica{\n
+        tbl [\n
+        shape=plaintext\n
+        label=<\n
+        <table border="0" cellborder = "0" cellspacing="0">\n'''
+        mensaje += "<tr>"
+        #aux = actual.eColumnas
+        #actual.eColumnas = actual.eFilas
+        #actual.eFilas = aux
+        a = ""
+        b = []
+        b = actual.Transpuesta(b)
+        print(b)
+        x = 0
+        q = ListaMatrices()
+        print(len(b))
+        print("SEUNDO:",len(b[1]))
+        q.insertar("nueva",len(b) , len(b[0]))
+        w = q.getNodoMatriz("nueva")
+        for item in (b):
+            for j in reversed(item):
+                w.insertar(j[2], j[1], j[0])
+                print(j)
+        actual2 = q.getNodoMatriz("nueva")
+        a = actual2.obtenervaloresporfilas(a)
+        a = a.strip()
+        print(a)
+        file = open("Resultado.dot","w")
+        while x < len(a):
+            char = a[x]
+            if char == "*":
+                mensaje += "<td bgcolor=\"black\">     </td>"
+            elif char == "-":
+                mensaje += "<td>    </td>"
+            elif a[x+1] == None:
+                break  
+            elif char == "\n":
+                mensaje += "</tr>\n<tr>"
+            x += 1
+        mensaje += '''</tr></table>
+                    >];
+                }'''    
+        file.write(mensaje)
+        file.close()
+        os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+        mensaje = ""
+        image1 = Image.open("Resultado.png")
+        photo = ImageTk.PhotoImage(image1)
+        reducida = image1.resize((150,150))
+        reducida.save("Reducidaredux.png")
+        image2 = Image.open("Reducidaredux.png")
+        photo = ImageTk.PhotoImage(image2)
+        label = tkinter.Label(F1,image=photo)
+        label.img = photo
+        label.place(x=250,y=50)
+        Matrices_Mod = Matrices
+    elif operacion == 4:
+        Fop = tkinter.Tk()
+        Fop.geometry("500x100")
+        Fop.resizable(width= False,height= False)
+        Fop.title("Limpiando Zona")
+        Fra = tkinter.Frame(Fop,bg= "light blue")
+        Fra.place(height=100,width=500)
+
+        etiquetafinicia = tkinter.Label(Fra,text="FILA INICIO")
+        etiquetafinicia.place(x= 10, y=10)
+        filainicia = tkinter.Entry(Fra)
+        filainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="COLUMNA INICIO")
+        etiquetafinicia.place(x= 140, y=10)
+        columnainicia = tkinter.Entry(Fra)
+        columnainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="FILA TERMINA")
+        etiquetafinicia.place(x= 260, y=10)
+        filatermina = tkinter.Entry(Fra)
+        filatermina.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="COLUMNA TERMINA")
+        etiquetafinicia.place(x= 380, y=10)
+        columnatermina = tkinter.Entry(Fra)
+        columnatermina.pack(side="left")
+
+        bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),columnatermina.get(),Fop))
+        bAceptar.place(x=230,y=70)
+        pass    
 
     
 
+def limpiarz(fi,ci,ft,ct,Frame):
+    if fi < ft and ci < ct:
 
+        print(fi)
+        print(ci)
+        print(ft)
+        print(ct)
+        Frame.destroy()
+    else:
+        messagebox.WARNING(message= "Las filas o las columnas finales son menores a las iniciales")
+    pass
 def operacionesd():
     global raiz, F1, operacion, Matrices, nombres
     F1.pack_forget()    
@@ -421,7 +522,7 @@ def operacionesd():
     Fop.resizable(width=False,height=False)
     Fop.title('Escogiendo Operación')
 
-    Fra = Frame(Fop,bg='light blue',height = 30,width = 900)
+    Fra = Frame(Fop,bg='light blue')
     Fra.place(height=500,width=300)
 
     var = IntVar()
@@ -453,7 +554,10 @@ def operacionesd():
     Fra.mainloop()
 
 
-
+valor1 = 0
+valor2 = 0
+valor3 = 0
+valor4 = 0
 nombre_m_1 = ""
 nombre_m_2 = ""
 nombres = []
