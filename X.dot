@@ -1,0 +1,12 @@
+digraph grafica{
+    tbl [
+    shape=plaintext
+    label=<
+    <table border="0" cellborder = "1" cellspacing="0">
+    <tr><td bgcolor="black">    </td><td>    </td><td>    </td></tr>  
+    <tr><td bgcolor="/rdylgn11/3:/rdylgn11/4">    </td><td>    </td><td>    </td></tr>  
+    <tr><td bgcolor="/rdylgn11/3:/rdylgn11/4">    </td><td>    </td><td>    </td></tr>  
+    <tr><td bgcolor="/rdylgn11/3:/rdylgn11/4">    </td><td>    </td><td>    </td></tr>  
+    </table>
+    >];
+}
