@@ -61,7 +61,9 @@ class matriz:
                 if actual.abajo == None:
                     actual.abajo = nuevo
                     nuevo.arriba = actual
-
+    
+    def reemplazar():
+        pass
 
     def recorrerFilas(self):
         eFila = self.eFilas.primero
@@ -525,6 +527,209 @@ class matriz:
 
         print("\n****************************** Fin Recorrido por Columnas ********************")
         return b
+
+    def Limpiar(self,fi,ci,ft,ct):
+        eFila= self.eFilas.primero
+        auxcolum = ci
+        print(fi,ci,ft,ct)
+        print(self.nombre)
+        while eFila.id < fi:
+            eFila = eFila.siguiente
+        actual = eFila.accesoNodo
+        print(actual.fila," ", actual.columna," ", actual.valor)
+        while actual.columna < ci:
+            actual = actual.derecha
+        print(actual.fila," ", actual.columna," ", actual.valor)
+        if fi == ft and ci == ct:
+            actual.valor = "-"
+        elif fi == ft and ci != ct:
+            while actual.columna <= ct:
+                actual.valor = "-"
+                if actual.derecha.columna > ct:
+                    break
+                else:
+                    actual = actual.derecha
+        elif fi != ft and ci == ct:
+            while actual.fila <= ft:
+                actual.valor = "-"
+                if actual.abajo.fila > ft:
+                    break
+                else:
+                    actual = actual.abajo
+        else:
+            while fi != (ft+1):
+                nodo = self.eFilas.getNodoporfila(fi, ci)
+                while ci != (ct+1):
+                    nodo.valor = "-"
+                    nodo = nodo.derecha
+                    ci += 1
+                ci = auxcolum
+                fi += 1    
+        
+    def barraH(self,f,c,items):
+        nodo = self.eFilas.getNodoporfila(f, c)
+        c = 0
+        while c < items:
+            nodo.valor = "*"
+            if nodo.derecha == None:
+                break
+            else:
+                nodo = nodo.derecha
+            c += 1    
+    
+    def barraV(self,f,c,items):
+        nodo = self.eFilas.getNodoporfila(f, c)
+        c = 0
+        while c < items:
+            nodo.valor = "*"
+            if nodo.abajo == None:
+                break
+            else:
+                nodo = nodo.abajo
+            c += 1    
+
+    def llenar(self):
+        f = self.filas
+        c = self.columnas
+        for i in range(f):
+            for j in range(c):
+                self.insertar(i, c, "-")
+        
+        
+    def union(self,nombre1,nombre2):
+        e = self.eFilas.primero
+        e1 = nombre1.eFilas.primero
+        while e1 != None:
+            e1a = e1.accesoNodo
+            ea = e.accesoNodo
+            while e1a != None:
+                if e1a.valor == "*":
+                    ea.valor = "*"
+                ea = ea.derecha
+                e1a = e1a.derecha
+            e = e.siguiente
+            e1 = e1.siguiente
+
+        e = self.eFilas.primero   
+        e2 = nombre2.eFilas.primero 
+        while e2 != None:
+            e2a = e2.accesoNodo
+            ea = e.accesoNodo
+            while e2a != None:
+                if e2a.valor == "*":
+                    ea.valor = "*"
+                ea = ea.derecha
+                e2a = e2a.derecha
+            e = e.siguiente
+            e2 = e2.siguiente
+    
+    def interseccion(self, nombre1, nombre2):
+        e = self.eFilas.primero
+        e1 = nombre1.eFilas.primero
+        while e1 != None:
+            e1a = e1.accesoNodo
+            ea = e.accesoNodo
+            while e1a != None:
+                if e1a.valor == "*":
+                    ea.valor = "*"
+                ea = ea.derecha
+                e1a = e1a.derecha
+            e = e.siguiente
+            e1 = e1.siguiente
+
+        e = self.eFilas.primero   
+        e2 = nombre2.eFilas.primero 
+        while e2 != None:
+            e2a = e2.accesoNodo
+            ea = e.accesoNodo
+            while e2a != None:
+                if e2a.valor == "-":
+                    ea.valor = "-"
+                ea = ea.derecha
+                e2a = e2a.derecha
+            e = e.siguiente
+            e2 = e2.siguiente
+
+        e = self.eFilas.primero
+        e1 = nombre1.eFilas.primero
+        while e1 != None:
+            e1a = e1.accesoNodo
+            ea = e.accesoNodo
+            while e1a != None:
+                if e1a.valor == "-":
+                    ea.valor = "-"
+                ea = ea.derecha
+                e1a = e1a.derecha
+            e = e.siguiente
+            e1 = e1.siguiente
+
+    def diferencia(self, nombre1, nombre2):
+        e = self.eFilas.primero
+        e1 = nombre1.eFilas.primero
+        while e1 != None:
+            e1a = e1.accesoNodo
+            ea = e.accesoNodo
+            while e1a != None:
+                if e1a.valor == "*":
+                    ea.valor = "*"
+                ea = ea.derecha
+                e1a = e1a.derecha
+            e = e.siguiente
+            e1 = e1.siguiente
+
+        e = self.eFilas.primero   
+        e2 = nombre2.eFilas.primero 
+        while e2 != None:
+            e2a = e2.accesoNodo
+            ea = e.accesoNodo
+            while e2a != None:
+                if e2a.valor == "*":
+                    ea.valor = "-"
+                ea = ea.derecha
+                e2a = e2a.derecha
+            e = e.siguiente
+            e2 = e2.siguiente
+
+    def difsimetrica(self,nombre1,nombre2):
+        e = self.eFilas.primero
+        e1 = nombre1.eFilas.primero
+        while e1 != None:
+            e1a = e1.accesoNodo
+            ea = e.accesoNodo
+            while e1a != None:
+                if e1a.valor == "*":
+                    ea.valor = "*"
+                ea = ea.derecha
+                e1a = e1a.derecha
+            e = e.siguiente
+            e1 = e1.siguiente
+
+        e = self.eFilas.primero   
+        e2 = nombre2.eFilas.primero 
+        while e2 != None:
+            e2a = e2.accesoNodo
+            ea = e.accesoNodo
+            while e2a != None:
+                if e2a.valor == "*" and ea.valor == "*":
+                    ea.valor = "-"
+                elif e2a.valor == "*" and ea.valor == "-":
+                    ea.valor = "*"
+                ea = ea.derecha
+                e2a = e2a.derecha
+            e = e.siguiente
+            e2 = e2.siguiente
+        
+
+
+        
+        
+        
+        
+
+
+
+
+
 '''
 m = matriz("nombre", 10, 10)
 m.insertar(1, 1, "A")

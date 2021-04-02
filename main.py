@@ -8,6 +8,8 @@ from listamatrices import ListaMatrices
 from graphviz import Source
 from PIL import ImageTk, Image
 from tkinter import messagebox
+from datetime import date,datetime
+from matriz import matriz
 
 Matrices = ListaMatrices()
 Matrices_Mod = ListaMatrices()
@@ -41,30 +43,30 @@ def cargar_archivo():
     shape=plaintext
     label=<'''
     for datos in arbol:
-        print("DATOS:",datos)
+        #print("DATOS:",datos)
         for sub in datos:
             if sub.tag == "nombre":
-                print("ENtro a nombre")
-                print("subdd:",sub.tag)
-                print("sub:",sub.text)
+                #print("ENtro a nombre")
+                #print("subdd:",sub.tag)
+                #print("sub:",sub.text)
                 nombre_actual = str(sub.text)
                 mensaje += "Nombre: "+nombre_actual+"\n"
                 label1 = ttk.Label(F1,text= "Nombre:").place(x=2,y=posiciony)
                 label1 = ttk.Label(F1,text= nombre_actual).place(x=100,y=posiciony)
                 posiciony += 20
             elif sub.tag == "filas":
-                print("ENtro a filas")
-                print("subdd:",sub.tag)
-                print("sub:",sub.text)
+                #print("ENtro a filas")
+                #print("subdd:",sub.tag)
+                #print("sub:",sub.text)
                 filas_actual = int(sub.text)
                 mensaje += "Filas: "+str(filas_actual)+"\n"
                 label1 = ttk.Label(F1,text= "Filas:").place(x=2,y=posiciony)
                 label1 = ttk.Label(F1,text= filas_actual).place(x=100,y=posiciony)
                 posiciony += 20
             elif sub.tag == "columnas":
-                print("ENtro a columnas")
-                print("subdd:",sub.tag)
-                print("sub:",sub.text)
+                #print("ENtro a columnas")
+                #print("subdd:",sub.tag)
+                #print("sub:",sub.text)
                 columnas_actual = int(sub.text)
                 mensaje += "Columnas: "+str(columnas_actual)+"\n"
                 label1 = ttk.Label(F1,text= " Columnas:").place(x=2,y=posiciony)
@@ -78,11 +80,11 @@ def cargar_archivo():
                 Matrices_Mod.insertar(nombre_actual, filas_actual, columnas_actual)
                 ameter_Mod = Matrices_Mod.getNodoMatriz(nombre_actual)
                 file = open(str(nombre_actual)+".dot","w") 
-                print("NOMBRE MATRIZ METIENDO:",ameter.nombre)
+                #print("NOMBRE MATRIZ METIENDO:",ameter.nombre)
                 #ameter.insertar(fila, columna, valor)
-                print("ENtro a imagen")
-                print("subdd:",sub.tag)
-                print("sub:",sub.text)
+                #print("ENtro a imagen")
+                #print("subdd:",sub.tag)
+                #print("sub:",sub.text)
                 filai = 0
                 columnai = 1
                 a = ""
@@ -149,14 +151,14 @@ def cargar_archivo():
                             else:
                                 mensaje+="<td>    </td></tr>"   
                     x += 1                     
-                print("PASO:",paso)        
+                #print("PASO:",paso)        
                 label1 = ttk.Label(F1,text= paso).place(x=100,y=posiciony)
                 #posiciony += 200
                 mensaje += '''</table>
                     >];
                 }'''
                 #ameter.recorrerFilas()
-                print("TAMAÑO A:",len(a))
+                #print("TAMAÑO A:",len(a))
                 sumando = filas_actual*15
                 posiciony += sumando
                 
@@ -167,7 +169,7 @@ def cargar_archivo():
         oss = "dot -Tjpg "+ nombre_actual+ ".dot -o "+nombre_actual+".png"
         os.system(oss)
         mensaje = ""
-    print("EMPEZANDO A IMPRIMIR TODAS")        
+    #print("EMPEZANDO A IMPRIMIR TODAS")        
     #Matrices.mostrardatosf()
             #print("subdd:",sub.tag)
             #print("sub:",sub.text)
@@ -245,13 +247,15 @@ def operaciones():
                     variable=var, bg='light blue',value=8,command=lambda:operaciones2(8))
     R8.pack(side='top')
     x = str(var.get())
-    print("XXXXXXXXXXXXXXXXXXXX.",x)
-    print("NOMBRES:",nombres)
+    #print("XXXXXXXXXXXXXXXXXXXX.",x)
+    #print("NOMBRES:",nombres)
+    label = tkinter.Label(Fra,text="Seleccione la matriz que desea operar",bg="light blue")
+    label.pack(side="top")
     Com = ttk.Combobox(Fra,state="readonly",width=20)
     Com.pack(side='top')
     Com['values'] = nombres
     matriz_obtenida = Com.current()
-    print(matriz_obtenida)
+    #print(matriz_obtenida)
     bAceptar = tkinter.Button(Fra, text= "Aceptar", width=12, command=lambda:despues_operaciones2(Fop,Com) )
     bAceptar.place(x=0,y=450)
     bSalir = tkinter.Button(Fra, text= "Cancelar",width=12, command=lambda:Cancelar(Fop))
@@ -272,7 +276,7 @@ def operaciones2(valor):
 def despues_operaciones2(Frame, combo):
     global operacion, nombre_m_1,Matrices_Mod, Matrices
     global F1
-    nombre_m_1 =  combo.get()
+    nombre_m_1 = combo.get()
     #print("CURRENT:",combo.current())
     #print("GET:",combo.get())
 
@@ -291,11 +295,13 @@ def despues_operaciones2(Frame, combo):
     photo = ImageTk.PhotoImage(image2)
     #reducida.show()
     #image1.size = (100,100)
-    print("SIZE:",image1.size)
-    print("SIZE SEGUNDA:",reducida.size)
+    #print("SIZE:",image1.size)
+    #print("SIZE SEGUNDA:",reducida.size)
     label = tkinter.Label(F1,image=photo)
     label.img = photo
     label.place(x=50,y=50)
+    label = tkinter.Label(F1, text=nombre_m_1,bg="light blue")
+    label.place(x=50,y=230)
     #im = PhotoImage(file=image1)
     #image1 = tkinter.PhotoImage(file="A.gif")
     #Fondo = ttk.Label(F1,image=im).place(x=1,y=1)
@@ -315,7 +321,7 @@ def despues_operaciones2(Frame, combo):
         cy = 1
         a = actual.obtenervaloresporfilas(a)
         a = a.strip()
-        print(a)
+        #print(a)
         x = 0 
         file = open("Resultado.dot","w")
         while x < len(a):
@@ -345,6 +351,8 @@ def despues_operaciones2(Frame, combo):
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=250,y=50)
+        label = tkinter.Label(F1,text="Resultado de Rotación Horizontal",bg="light blue")
+        label.place(x=250,y=230)
         Matrices_Mod = Matrices
     elif operacion == 2:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
@@ -361,8 +369,8 @@ def despues_operaciones2(Frame, combo):
         cx = 1
         cy = 1
         b = actual.obtenervaloresporcolumnas(b)
-        print(b)
-        print(len(b))
+        #print(b)
+        #print(len(b))
         x = 0
         columnas = actual.columnas
         filas = actual.filas
@@ -408,6 +416,8 @@ def despues_operaciones2(Frame, combo):
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=250,y=50)
+        label = tkinter.Label(F1,text="Resultado de Rotación Vertical",bg="light blue")
+        label.place(x=250,y=230)
         Matrices_Mod = Matrices
     elif operacion == 3:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
@@ -468,6 +478,8 @@ def despues_operaciones2(Frame, combo):
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=250,y=50)
+        label = tkinter.Label(F1,text="Resultado de Matriz Transpuesta",bg="light blue")
+        label.place(x=250,y=230)
         Matrices_Mod = Matrices
     elif operacion == 4:
         Fop = tkinter.Tk()
@@ -499,21 +511,241 @@ def despues_operaciones2(Frame, combo):
 
         bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),columnatermina.get(),Fop))
         bAceptar.place(x=230,y=70)
-        pass    
+    elif operacion == 5:
+        Fop = tkinter.Tk()
+        Fop.geometry("400x100")
+        Fop.resizable(width= False,height= False)
+        Fop.title("Limpiando Zona")
+        Fra = tkinter.Frame(Fop,bg= "light blue")
+        Fra.place(height=100,width=500)
+
+        etiquetafinicia = tkinter.Label(Fra,text="FILA")
+        etiquetafinicia.place(x= 10, y=10)
+        filainicia = tkinter.Entry(Fra)
+        filainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="COLUMNA")
+        etiquetafinicia.place(x= 140, y=10)
+        columnainicia = tkinter.Entry(Fra)
+        columnainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="Numero de Items")
+        etiquetafinicia.place(x= 260, y=10)
+        filatermina = tkinter.Entry(Fra)
+        filatermina.pack(side="left")
+
+
+        bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),0,Fop))
+        bAceptar.place(x=180,y=70)
+        
+    elif operacion == 6:
+        Fop = tkinter.Tk()
+        Fop.geometry("400x100")
+        Fop.resizable(width= False,height= False)
+        Fop.title("Limpiando Zona")
+        Fra = tkinter.Frame(Fop,bg= "light blue")
+        Fra.place(height=100,width=500)
+
+        etiquetafinicia = tkinter.Label(Fra,text="FILA")
+        etiquetafinicia.place(x= 10, y=10)
+        filainicia = tkinter.Entry(Fra)
+        filainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="COLUMNA")
+        etiquetafinicia.place(x= 140, y=10)
+        columnainicia = tkinter.Entry(Fra)
+        columnainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="Numero de Items")
+        etiquetafinicia.place(x= 260, y=10)
+        filatermina = tkinter.Entry(Fra)
+        filatermina.pack(side="left")
+
+
+        bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),0,Fop))
+        bAceptar.place(x=180,y=70)
+    elif operacion == 7:
+        pass
+    elif operacion == 8:
+        pass
 
     
 
 def limpiarz(fi,ci,ft,ct,Frame):
-    if fi < ft and ci < ct:
+    global nombre_m_1,Matrices_Mod, operacion
+    print(nombre_m_1)
+    if operacion == 4:
+        if fi < ft and ci < ct:
+            actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+            if int(fi) >= 0 and int(ft) <= actual.filas and int(ci) >= 0 and int(ct) <= actual.columnas:
+                fi = int(fi)
+                ci = int(ci)
+                ft = int(ft)
+                ct = int(ct)
+                actual.recorrerColumnas()
+                actual.Limpiar(fi, ci, ft, ct)
+                actual.recorrerFilas()
+                a = ""
+                a = actual.obtenervaloresporfilas(a)
+                a = a.strip()
+                print(a)
+                x = 0 
+                mensaje = '''digraph grafica{\n
+                tbl [\n
+                shape=plaintext\n
+                label=<\n
+                <table border="0" cellborder = "0" cellspacing="0">\n'''
+                mensaje += "<tr>"
+                file = open("Resultado.dot","w")
+                while x < len(a):
+                    char = a[x]
+                    if char == "*":
+                        mensaje += "<td bgcolor=\"black\">     </td>"
+                    elif char == "-":
+                        mensaje += "<td>    </td>"
+                    elif a[x+1] == None:
+                        break  
+                    elif char == "\n":
+                        mensaje += "</tr>\n<tr>"
+                    x += 1
+                mensaje += '''</tr></table>
+                            >];
+                        }'''    
+                file.write(mensaje)
+                file.close()
+                os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+                mensaje = ""
+                image1 = Image.open("Resultado.png")
+                photo = ImageTk.PhotoImage(image1)
+                reducida = image1.resize((150,150))
+                reducida.save("Reducidaredux.png")
+                image2 = Image.open("Reducidaredux.png")
+                photo = ImageTk.PhotoImage(image2)
+                label = tkinter.Label(F1,image=photo)
+                label.img = photo
+                label.place(x=250,y=50)
+                label = tkinter.Label(F1,text="Resultado de Limpiar Zona",bg="light blue")
+                label.place(x=250,y=230)
+                Matrices_Mod = Matrices
+                
+                Frame.destroy()
+            else:
+                messagebox.WARNING(message= "Algun dato es mayor que los bordes de la matriz")        
+        else:
+            messagebox.WARNING(message= "Las filas o las columnas finales son menores a las iniciales")
+    elif operacion == 5:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        if actual.filas > int(fi) and actual.columnas > int(ci):
+            fi = int(fi)
+            ci = int(ci)
+            ft = int(ft)
+            ct = int(ct)
+            actual.recorrerColumnas()
+            actual.barraH(fi, ci, ft)
+            actual.recorrerFilas()
+            a = ""
+            a = actual.obtenervaloresporfilas(a)
+            a = a.strip()
+            print(a)
+            x = 0 
+            mensaje = '''digraph grafica{\n
+            tbl [\n
+            shape=plaintext\n
+            label=<\n
+            <table border="0" cellborder = "0" cellspacing="0">\n'''
+            mensaje += "<tr>"
+            file = open("Resultado.dot","w")
+            while x < len(a):
+                char = a[x]
+                if char == "*":
+                    mensaje += "<td bgcolor=\"black\">     </td>"
+                elif char == "-":
+                    mensaje += "<td>    </td>"
+                elif a[x+1] == None:
+                    break  
+                elif char == "\n":
+                    mensaje += "</tr>\n<tr>"
+                x += 1
+            mensaje += '''</tr></table>
+                        >];
+                    }'''    
+            file.write(mensaje)
+            file.close()
+            os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+            mensaje = ""
+            image1 = Image.open("Resultado.png")
+            photo = ImageTk.PhotoImage(image1)
+            reducida = image1.resize((150,150))
+            reducida.save("Reducidaredux.png")
+            image2 = Image.open("Reducidaredux.png")
+            photo = ImageTk.PhotoImage(image2)
+            label = tkinter.Label(F1,image=photo)
+            label.img = photo
+            label.place(x=250,y=50)
+            label = tkinter.Label(F1,text="Resultado de Agregar Horizontalmente",bg="light blue")
+            label.place(x=250,y=230)
+            Matrices_Mod = Matrices
+            
+            Frame.destroy()
+        else:
+            messagebox.WARNING(message= "El nodo desde el que quiere iniciar no existe")    
+    elif operacion == 6:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        if actual.filas > int(fi) and actual.columnas > int(ci):
+            fi = int(fi)
+            ci = int(ci)
+            ft = int(ft)
+            ct = int(ct)
+            actual.recorrerColumnas()
+            actual.barraV(fi, ci, ft)
+            actual.recorrerFilas()
+            a = ""
+            a = actual.obtenervaloresporfilas(a)
+            a = a.strip()
+            print(a)
+            x = 0 
+            mensaje = '''digraph grafica{\n
+            tbl [\n
+            shape=plaintext\n
+            label=<\n
+            <table border="0" cellborder = "0" cellspacing="0">\n'''
+            mensaje += "<tr>"
+            file = open("Resultado.dot","w")
+            while x < len(a):
+                char = a[x]
+                if char == "*":
+                    mensaje += "<td bgcolor=\"black\">     </td>"
+                elif char == "-":
+                    mensaje += "<td>    </td>"
+                elif a[x+1] == None:
+                    break  
+                elif char == "\n":
+                    mensaje += "</tr>\n<tr>"
+                x += 1
+            mensaje += '''</tr></table>
+                        >];
+                    }'''    
+            file.write(mensaje)
+            file.close()
+            os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+            mensaje = ""
+            image1 = Image.open("Resultado.png")
+            photo = ImageTk.PhotoImage(image1)
+            reducida = image1.resize((150,150))
+            reducida.save("Reducidaredux.png")
+            image2 = Image.open("Reducidaredux.png")
+            photo = ImageTk.PhotoImage(image2)
+            label = tkinter.Label(F1,image=photo)
+            label.img = photo
+            label.place(x=250,y=50)
+            label = tkinter.Label(F1,text="Resultado de Agregar Verticalmente",bg="light blue")
+            label.place(x=250,y=230)
+            Matrices_Mod = Matrices
+            
+            Frame.destroy()
+        else:
+            messagebox.WARNING(message= "El nodo desde el que quiere iniciar no existe")        
 
-        print(fi)
-        print(ci)
-        print(ft)
-        print(ct)
-        Frame.destroy()
-    else:
-        messagebox.WARNING(message= "Las filas o las columnas finales son menores a las iniciales")
-    pass
 def operacionesd():
     global raiz, F1, operacion, Matrices, nombres
     F1.pack_forget()    
@@ -542,16 +774,327 @@ def operacionesd():
     R4.pack(side='top')
     
     x = str(var.get())
-    print("XXXXXXXXXXXXXXXXXXXX.",x)
-    bAceptar = tkinter.Button(Fra, text= "Aceptar", width=12)
-    bAceptar.place(x=0,y=450)
-    bSalir = tkinter.Button(Fra, text= "Cancelar",width=12)
-    bSalir.place(x=100,y=450)
-    print("NOMBRES:",nombres)
+    #print("XXXXXXXXXXXXXXXXXXXX.",x)
+    #print("NOMBRES:",nombres)
+    label = tkinter.Label(Fra,text="Seleccione la matriz que desea operar",bg="light blue")
+    label.pack(side="top")
     Com = ttk.Combobox(Fra,state="readonly",width=20)
     Com.pack(side='top')
     Com['values'] = nombres
+    matriz_obtenida = Com.current()
+
+    label = tkinter.Label(Fra,text="Seleccione la segunda matriz que desea operar",bg="light blue")
+    label.pack(side="top")
+    Com1 = ttk.Combobox(Fra,state="readonly",width=20)
+    Com1.pack(side='top')
+    Com1['values'] = nombres
+    matriz_obtenida = Com1.current()
+    #print(matriz_obtenida)
+    bAceptar = tkinter.Button(Fra, text= "Aceptar", width=12, command=lambda:despues_operaciones2d(Fop,Com,Com1) )
+    bAceptar.place(x=0,y=450)
+    bSalir = tkinter.Button(Fra, text= "Cancelar",width=12, command=lambda:Cancelar(Fop))
+    bSalir.place(x=100,y=450)
     Fra.mainloop()
+
+def despues_operaciones2d(Frame, combo1, combo2):
+    global operacion, nombre_m_1, nombre_m_2,Matrices_Mod, Matrices
+    global F1
+    nombre_m_1 = combo1.get()
+    nombre_m_2 = combo2.get()
+    inicio()
+    Frame.destroy()
+    image1 = Image.open(nombre_m_1+".png")
+    photo = ImageTk.PhotoImage(image1)
+    reducida = image1.resize((150,150))
+    reducida.save(nombre_m_1+"redux.png")
+    image2 = Image.open(nombre_m_1+"redux.png")
+    photo = ImageTk.PhotoImage(image2)
+    label = tkinter.Label(F1,image=photo)
+    label.img = photo
+    label.place(x=50,y=50)
+    label = tkinter.Label(F1, text=nombre_m_1,bg="light blue")
+    label.place(x=50,y=230)
+    
+    image1 = Image.open(nombre_m_2+".png")
+    photo = ImageTk.PhotoImage(image1)
+    reducida = image1.resize((150,150))
+    reducida.save(nombre_m_2+"redux.png")
+    image2 = Image.open(nombre_m_2+"redux.png")
+    photo = ImageTk.PhotoImage(image2)
+    label = tkinter.Label(F1,image=photo)
+    label.img = photo
+    label.place(x=250,y=50)
+    label = tkinter.Label(F1, text=nombre_m_2,bg="light blue")
+    label.place(x=250,y=230)
+    if operacion == 9:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        actual2 = Matrices_Mod.getNodoMatriz(nombre_m_2)
+        mayorf = 0
+        mayorc = 0
+        if actual.filas > actual2.filas:
+            mayorf = actual.filas
+        else:
+            mayorf = actual2.filas    
+        if actual.columnas > actual2.columnas:
+            mayorc = actual.columnas
+        else:
+            mayorc = actual2.columnas    
+        momentanea = matriz("r", mayorf, mayorc)
+        momentanea.llenar()
+        momentanea.union(actual, actual2)
+        a = ""
+        a = momentanea.obtenervaloresporfilas(a)
+        print(a)
+        a = a.strip()
+
+        mensaje = '''digraph grafica{\n
+        tbl [\n
+        shape=plaintext\n
+        label=<\n
+        <table border="0" cellborder = "0" cellspacing="0">\n'''
+        mensaje += "<tr>"
+        x = 0
+        file = open("Resultado.dot","w")
+        while x < len(a):
+            char = a[x]
+            if char == "*":
+                mensaje += "<td bgcolor=\"black\">     </td>"
+            elif char == "-":
+                mensaje += "<td>    </td>"
+            elif a[x+1] == None:
+                break  
+            elif char == "\n":
+                mensaje += "</tr>\n<tr>"
+            x += 1
+        mensaje += '''</tr></table>
+                    >];
+                }'''    
+        file.write(mensaje)
+        file.close()
+        os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+        mensaje = ""
+        image1 = Image.open("Resultado.png")
+        photo = ImageTk.PhotoImage(image1)
+        reducida = image1.resize((150,150))
+        reducida.save("Reducidaredux.png")
+        image2 = Image.open("Reducidaredux.png")
+        photo = ImageTk.PhotoImage(image2)
+        label = tkinter.Label(F1,image=photo)
+        label.img = photo
+        label.place(x=190,y=280)
+        label = tkinter.Label(F1,text="Resultado de Union entre ambas matrices",bg="light blue")
+        label.place(x=210,y=450)
+        Matrices_Mod = Matrices
+        
+        Frame.destroy()
+        
+        
+    elif operacion == 10:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        actual2 = Matrices_Mod.getNodoMatriz(nombre_m_2)
+        mayorf = 0
+        mayorc = 0
+        if actual.filas > actual2.filas:
+            mayorf = actual.filas
+        else:
+            mayorf = actual2.filas    
+        if actual.columnas > actual2.columnas:
+            mayorc = actual.columnas
+        else:
+            mayorc = actual2.columnas    
+        momentanea = matriz("r", mayorf, mayorc)
+        momentanea.llenar()
+        momentanea.interseccion(actual, actual2)
+        a = ""
+        a = momentanea.obtenervaloresporfilas(a)
+        print(a)
+        a = a.strip()
+        mensaje = '''digraph grafica{\n
+        tbl [\n
+        shape=plaintext\n
+        label=<\n
+        <table border="0" cellborder = "0" cellspacing="0">\n'''
+        mensaje += "<tr>"
+        x = 0
+        file = open("Resultado.dot","w")
+        while x < len(a):
+            char = a[x]
+            if char == "*":
+                mensaje += "<td bgcolor=\"black\">     </td>"
+            elif char == "-":
+                mensaje += "<td>    </td>"
+            elif a[x+1] == None:
+                break  
+            elif char == "\n":
+                mensaje += "</tr>\n<tr>"
+            x += 1
+        mensaje += '''</tr></table>
+                    >];
+                }'''    
+        file.write(mensaje)
+        file.close()
+        os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+        mensaje = ""
+        image1 = Image.open("Resultado.png")
+        photo = ImageTk.PhotoImage(image1)
+        reducida = image1.resize((150,150))
+        reducida.save("Reducidaredux.png")
+        image2 = Image.open("Reducidaredux.png")
+        photo = ImageTk.PhotoImage(image2)
+        label = tkinter.Label(F1,image=photo)
+        label.img = photo
+        label.place(x=190,y=280)
+        label = tkinter.Label(F1,text="Resultado de Intersección entre ambas matrices",bg="light blue")
+        label.place(x=210,y=450)
+        Matrices_Mod = Matrices
+        
+        Frame.destroy()
+    elif operacion == 11:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        actual2 = Matrices_Mod.getNodoMatriz(nombre_m_2)
+        mayorf = 0
+        mayorc = 0
+        if actual.filas > actual2.filas:
+            mayorf = actual.filas
+        else:
+            mayorf = actual2.filas    
+        if actual.columnas > actual2.columnas:
+            mayorc = actual.columnas
+        else:
+            mayorc = actual2.columnas    
+        momentanea = matriz("r", mayorf, mayorc)
+        momentanea.llenar()
+        momentanea.diferencia(actual, actual2)
+        a = ""
+        a = momentanea.obtenervaloresporfilas(a)
+        print(a)
+        a = a.strip()
+        mensaje = '''digraph grafica{\n
+        tbl [\n
+        shape=plaintext\n
+        label=<\n
+        <table border="0" cellborder = "0" cellspacing="0">\n'''
+        mensaje += "<tr>"
+        x = 0
+        file = open("Resultado.dot","w")
+        while x < len(a):
+            char = a[x]
+            if char == "*":
+                mensaje += "<td bgcolor=\"black\">     </td>"
+            elif char == "-":
+                mensaje += "<td>    </td>"
+            elif a[x+1] == None:
+                break  
+            elif char == "\n":
+                mensaje += "</tr>\n<tr>"
+            x += 1
+        mensaje += '''</tr></table>
+                    >];
+                }'''    
+        file.write(mensaje)
+        file.close()
+        os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+        mensaje = ""
+        image1 = Image.open("Resultado.png")
+        photo = ImageTk.PhotoImage(image1)
+        reducida = image1.resize((150,150))
+        reducida.save("Reducidaredux.png")
+        image2 = Image.open("Reducidaredux.png")
+        photo = ImageTk.PhotoImage(image2)
+        label = tkinter.Label(F1,image=photo)
+        label.img = photo
+        label.place(x=190,y=280)
+        label = tkinter.Label(F1,text="Resultado de Diferencia entre ambas matrices",bg="light blue")
+        label.place(x=210,y=450)
+        Matrices_Mod = Matrices
+        
+        Frame.destroy()
+    elif operacion == 12:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        actual2 = Matrices_Mod.getNodoMatriz(nombre_m_2)
+        mayorf = 0
+        mayorc = 0
+        if actual.filas > actual2.filas:
+            mayorf = actual.filas
+        else:
+            mayorf = actual2.filas    
+        if actual.columnas > actual2.columnas:
+            mayorc = actual.columnas
+        else:
+            mayorc = actual2.columnas    
+        momentanea = matriz("r", mayorf, mayorc)
+        momentanea.llenar()
+        momentanea.difsimetrica(actual, actual2)
+        a = ""
+        a = momentanea.obtenervaloresporfilas(a)
+        print(a)
+        a = a.strip()
+        mensaje = '''digraph grafica{\n
+        tbl [\n
+        shape=plaintext\n
+        label=<\n
+        <table border="0" cellborder = "0" cellspacing="0">\n'''
+        mensaje += "<tr>"
+        x = 0
+        file = open("Resultado.dot","w")
+        while x < len(a):
+            char = a[x]
+            if char == "*":
+                mensaje += "<td bgcolor=\"black\">     </td>"
+            elif char == "-":
+                mensaje += "<td>    </td>"
+            elif a[x+1] == None:
+                break  
+            elif char == "\n":
+                mensaje += "</tr>\n<tr>"
+            x += 1
+        mensaje += '''</tr></table>
+                    >];
+                }'''    
+        file.write(mensaje)
+        file.close()
+        os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+        mensaje = ""
+        image1 = Image.open("Resultado.png")
+        photo = ImageTk.PhotoImage(image1)
+        reducida = image1.resize((150,150))
+        reducida.save("Reducidaredux.png")
+        image2 = Image.open("Reducidaredux.png")
+        photo = ImageTk.PhotoImage(image2)
+        label = tkinter.Label(F1,image=photo)
+        label.img = photo
+        label.place(x=190,y=280)
+        label = tkinter.Label(F1,text="Resultado de Diferencia Simétrica entre ambas matrices",bg="light blue")
+        label.place(x=210,y=450)
+        Matrices_Mod = Matrices
+        
+        Frame.destroy()
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 valor1 = 0

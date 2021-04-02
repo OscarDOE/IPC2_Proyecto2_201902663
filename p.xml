@@ -55,4 +55,21 @@
 				----------
 			</imagen>
 		</matriz>
+		<matriz>
+			<nombre>Ejem</nombre>
+			<filas>10</filas>
+			<columnas>10</columnas>
+			<imagen>
+				----------
+				-**-------
+				-**-------
+				-**-------
+				-**-------
+				----------
+				-**-------
+				-**-------
+				----------
+				----------
+			</imagen>
+		</matriz>
 	</matrices>

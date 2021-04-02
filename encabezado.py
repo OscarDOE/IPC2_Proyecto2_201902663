@@ -34,4 +34,17 @@ class listaEncabezado:
                 return actual
             actual = actual.siguiente       
         return None        
+
+    def getNodoporfila(self,fila,columna):
+        actual = self.primero
+        while actual != None:
+            if actual.id == fila:
+                nodo = actual.accesoNodo
+                while nodo != None:
+                    if nodo.columna == columna:
+                        return nodo
+                    nodo = nodo.derecha
+                return None    
+            actual = actual.siguiente
+        return None        
     
