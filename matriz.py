@@ -588,6 +588,91 @@ class matriz:
                 nodo = nodo.abajo
             c += 1    
 
+    def cuadro(self,fi,co,filat,columnat):
+        c = 1
+        flag = False
+        nodo = self.eFilas.getNodoporfila(fi, co)
+        while c < columnat:
+            nodo.valor = "*"
+            if nodo.derecha == None:
+                flag = True
+                break
+            else:
+                nodo = nodo.derecha
+            c += 1
+        c = 0
+        if flag:
+            pass
+        else:
+            while c < filat:
+                nodo.valor = "*"
+                if nodo.abajo == None:
+                    break
+                else: 
+                    nodo = nodo.abajo 
+                c += 1
+        c = 1
+        flag = False
+        nodo = self.eFilas.getNodoporfila(fi, co)
+        while c < filat:
+            nodo.valor = "*"
+            if nodo.abajo == None:
+                flag = True
+                break
+            else:
+                nodo = nodo.abajo
+            c += 1
+        c = 0
+        if flag:
+            pass
+        else:
+            while c < columnat:
+                nodo.valor = "*"
+                if nodo.derecha == None:
+                    break
+                else:
+                    nodo = nodo.derecha
+                c += 1
+                
+    def triangulo(self,fi,co,altura):
+        c = 1
+        flag = False
+        nodo = self.eFilas.getNodoporfila(fi, co)
+        while c < altura:
+            nodo.valor = "*"
+            if nodo.abajo == None:
+                flag = True
+                break
+            else:
+                nodo = nodo.abajo
+            c += 1
+        c = 0
+        if flag:
+            pass
+        else:
+            while c < altura:
+                nodo.valor = "*"
+                if nodo.derecha == None:
+                    flag = True
+                    break
+                else:
+                    nodo = nodo.derecha
+                c += 1
+
+        c = 0
+        nodo = self.eFilas.getNodoporfila(fi, co)
+        while c < altura:
+            nodo.valor = "*"
+            if nodo.abajo == None or nodo.abajo.derecha == None:
+                flag = True
+                break
+            else:
+                nodo = nodo.abajo.derecha
+            c += 1
+            
+
+
+
     def llenar(self):
         f = self.filas
         c = self.columnas
@@ -721,7 +806,12 @@ class matriz:
         
 
 
-        
+class reportes:
+    def __init__(self, correlativo, mensaje):
+        self.mensaje = mensaje
+        self.correlativo = correlativo
+        self.siguiente = None
+        self.anterior = None
         
         
         

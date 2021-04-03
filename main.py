@@ -3,16 +3,23 @@ from tkinter.filedialog import askopenfilename
 import tkinter 
 from tkinter import ttk
 import os
+from os import remove
 import xml.etree.ElementTree as ET
 from listamatrices import ListaMatrices
+from listamatrices import ListaReportes
 from graphviz import Source
 from PIL import ImageTk, Image
 from tkinter import messagebox
 from datetime import date,datetime
+import time
+import webbrowser
 from matriz import matriz
+from copy import deepcopy
 
 Matrices = ListaMatrices()
 Matrices_Mod = ListaMatrices()
+Reportes = ListaReportes()
+contador_repo = 1
 ruta = ""
 valores = []
 def cargar_archivo():
@@ -51,8 +58,8 @@ def cargar_archivo():
                 #print("sub:",sub.text)
                 nombre_actual = str(sub.text)
                 mensaje += "Nombre: "+nombre_actual+"\n"
-                label1 = ttk.Label(F1,text= "Nombre:").place(x=2,y=posiciony)
-                label1 = ttk.Label(F1,text= nombre_actual).place(x=100,y=posiciony)
+                #label1 = ttk.Label(F1,text= "Nombre:").place(x=2,y=posiciony)
+                #label1 = ttk.Label(F1,text= nombre_actual).place(x=100,y=posiciony)
                 posiciony += 20
             elif sub.tag == "filas":
                 #print("ENtro a filas")
@@ -60,8 +67,8 @@ def cargar_archivo():
                 #print("sub:",sub.text)
                 filas_actual = int(sub.text)
                 mensaje += "Filas: "+str(filas_actual)+"\n"
-                label1 = ttk.Label(F1,text= "Filas:").place(x=2,y=posiciony)
-                label1 = ttk.Label(F1,text= filas_actual).place(x=100,y=posiciony)
+                #label1 = ttk.Label(F1,text= "Filas:").place(x=2,y=posiciony)
+                #label1 = ttk.Label(F1,text= filas_actual).place(x=100,y=posiciony)
                 posiciony += 20
             elif sub.tag == "columnas":
                 #print("ENtro a columnas")
@@ -69,8 +76,8 @@ def cargar_archivo():
                 #print("sub:",sub.text)
                 columnas_actual = int(sub.text)
                 mensaje += "Columnas: "+str(columnas_actual)+"\n"
-                label1 = ttk.Label(F1,text= " Columnas:").place(x=2,y=posiciony)
-                label1 = ttk.Label(F1,text= columnas_actual).place(x=100,y=posiciony)
+                #label1 = ttk.Label(F1,text= " Columnas:").place(x=2,y=posiciony)
+                #label1 = ttk.Label(F1,text= columnas_actual).place(x=100,y=posiciony)
                 posiciony += 20
             elif sub.tag == "imagen":
                 #Matriz.insertar(nombre_actual,filas_actual,columnas_actual)
@@ -90,7 +97,7 @@ def cargar_archivo():
                 a = ""
                 c = sub.text
                 d = c.strip()
-                label1 = ttk.Label(F1,text= " Imagen:").place(x=2,y=posiciony)
+                #label1 = ttk.Label(F1,text= " Imagen:").place(x=2,y=posiciony)
                 salto_linea = 0
                 for i in sub.text:
                     if i == "*" or i == "-":
@@ -152,7 +159,7 @@ def cargar_archivo():
                                 mensaje+="<td>    </td></tr>"   
                     x += 1                     
                 #print("PASO:",paso)        
-                label1 = ttk.Label(F1,text= paso).place(x=100,y=posiciony)
+                #label1 = ttk.Label(F1,text= paso).place(x=100,y=posiciony)
                 #posiciony += 200
                 mensaje += '''</table>
                     >];
@@ -168,6 +175,7 @@ def cargar_archivo():
         file.close()
         oss = "dot -Tjpg "+ nombre_actual+ ".dot -o "+nombre_actual+".png"
         os.system(oss)
+        os.remove(nombre_actual+".dot")
         mensaje = ""
     #print("EMPEZANDO A IMPRIMIR TODAS")        
     #Matrices.mostrardatosf()
@@ -181,7 +189,7 @@ def cargar_archivo():
 
 
 def inicio():
-    global raiz
+    global raiz, nombres
     global F1
     F1.destroy()
     F1 = Frame(raiz,bg='light blue',height = 30,width = 900)
@@ -195,21 +203,30 @@ def inicio():
     b2F1.place(x=95,y=10)
     b3F1 = tkinter.Button(F1, text= "Operaciones Duales", bg= "light green", command=operacionesd,width=20)
     b3F1.place(x=245,y=10)
-    b4F1 = tkinter.Button(F1, text= "Reportes", bg= "light green", command=inicio,width=14)
+    b4F1 = tkinter.Button(F1, text= "Reportes", bg= "light green", command=reportes,width=14)
     b4F1.place(x=395,y=10)
-    b5F1 = tkinter.Button(F1, text= "Ayuda", bg= "light green", command=inicio,width=14)
+    b5F1 = tkinter.Button(F1, text= "Ayuda", bg= "light green", command=lambda:ayuda(0),width=13)
     b5F1.place(x=503,y=10)
-
-
-    #label1 = ttk.Label(F1,text="Ruta")
-    #label1.place(x=2,y=50)
-    #label1 = ttk.Label(F1,text="No ha ingresado ninguna matriz")
-    #label1.place(x=50,y=50)
-    #barra = tkinter.Scrollbar(F1)
-    #barra.pack(side="right",fill="y")
+    image2 = Image.open("b123asurero.png")
+    photo = ImageTk.PhotoImage(image2)
+    #label = tkinter.Label(F1,image=photo)
+    #label.img = photo
+    #label.place(x=190,y=280)
+    b6F1 = tkinter.Button(F1, image=photo, bg= "light green", command=inicio,width=14)
+    b6F1.img = photo
+    b6F1.place(x=605,y=10)
+    if nombres:
+        pass
+    else:
+        label1 = ttk.Label(F1,text="Ruta")
+        label1.place(x=2,y=50)
+        label1 = ttk.Label(F1,text="No ha ingresado ninguna matriz")
+        label1.place(x=50,y=50)
+        #barra = tkinter.Scrollbar(F1)
+        #barra.pack(side="right",fill="y")
 
 def operaciones():
-    global raiz, F1, operacion, Matrices, nombres
+    global raiz, F1, operacion, Matrices, nombres, ruta
     F1.pack_forget()    
     Fop = tkinter.Tk()
     Fop.geometry('300x500')
@@ -274,7 +291,7 @@ def operaciones2(valor):
     print(operacion)
 
 def despues_operaciones2(Frame, combo):
-    global operacion, nombre_m_1,Matrices_Mod, Matrices
+    global operacion, nombre_m_1,Matrices_Mod, Matrices, Reportes, contador_repo
     global F1
     nombre_m_1 = combo.get()
     #print("CURRENT:",combo.current())
@@ -290,8 +307,8 @@ def despues_operaciones2(Frame, combo):
     image1 = Image.open(nombre_m_1+".png")
     photo = ImageTk.PhotoImage(image1)
     reducida = image1.resize((150,150))
-    reducida.save(nombre_m_1+"redux.png")
-    image2 = Image.open(nombre_m_1+"redux.png")
+    reducida.save(nombre_m_1+".png")
+    image2 = Image.open(nombre_m_1+".png")
     photo = ImageTk.PhotoImage(image2)
     #reducida.show()
     #image1.size = (100,100)
@@ -345,14 +362,19 @@ def despues_operaciones2(Frame, combo):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=250,y=50)
         label = tkinter.Label(F1,text="Resultado de Rotación Horizontal",bg="light blue")
         label.place(x=250,y=230)
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Rotación Horizontal -- Matriz usada:"+nombre_m_1)
+        contador_repo += 1
         Matrices_Mod = Matrices
     elif operacion == 2:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
@@ -410,14 +432,19 @@ def despues_operaciones2(Frame, combo):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=250,y=50)
         label = tkinter.Label(F1,text="Resultado de Rotación Vertical",bg="light blue")
         label.place(x=250,y=230)
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Rotación Vertical -- Matriz usada:"+nombre_m_1)
+        contador_repo += 1
         Matrices_Mod = Matrices
     elif operacion == 3:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
@@ -472,14 +499,19 @@ def despues_operaciones2(Frame, combo):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=250,y=50)
         label = tkinter.Label(F1,text="Resultado de Matriz Transpuesta",bg="light blue")
         label.place(x=250,y=230)
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Transpuesta -- Matriz usada:"+nombre_m_1)
+        contador_repo += 1
         Matrices_Mod = Matrices
     elif operacion == 4:
         Fop = tkinter.Tk()
@@ -515,7 +547,7 @@ def despues_operaciones2(Frame, combo):
         Fop = tkinter.Tk()
         Fop.geometry("400x100")
         Fop.resizable(width= False,height= False)
-        Fop.title("Limpiando Zona")
+        Fop.title("Agregando Barra Horizontal")
         Fra = tkinter.Frame(Fop,bg= "light blue")
         Fra.place(height=100,width=500)
 
@@ -542,7 +574,7 @@ def despues_operaciones2(Frame, combo):
         Fop = tkinter.Tk()
         Fop.geometry("400x100")
         Fop.resizable(width= False,height= False)
-        Fop.title("Limpiando Zona")
+        Fop.title("Agregando Barra Vertical")
         Fra = tkinter.Frame(Fop,bg= "light blue")
         Fra.place(height=100,width=500)
 
@@ -565,14 +597,68 @@ def despues_operaciones2(Frame, combo):
         bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),0,Fop))
         bAceptar.place(x=180,y=70)
     elif operacion == 7:
-        pass
+        Fop = tkinter.Tk()
+        Fop.geometry("500x100")
+        Fop.resizable(width= False,height= False)
+        Fop.title("Agregando Rectángulo")
+        Fra = tkinter.Frame(Fop,bg= "light blue")
+        Fra.place(height=100,width=500)
+
+        etiquetafinicia = tkinter.Label(Fra,text="FILA INICIO")
+        etiquetafinicia.place(x= 10, y=10)
+        filainicia = tkinter.Entry(Fra)
+        filainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="COLUMNA INICIO")
+        etiquetafinicia.place(x= 140, y=10)
+        columnainicia = tkinter.Entry(Fra)
+        columnainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="ALTURA")
+        etiquetafinicia.place(x= 260, y=10)
+        filatermina = tkinter.Entry(Fra)
+        filatermina.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="BASE")
+        etiquetafinicia.place(x= 380, y=10)
+        columnatermina = tkinter.Entry(Fra)
+        columnatermina.pack(side="left")
+
+        bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),columnatermina.get(),Fop))
+        bAceptar.place(x=230,y=70)
+        
     elif operacion == 8:
-        pass
+        Fop = tkinter.Tk()
+        Fop.geometry("400x100")
+        Fop.resizable(width= False,height= False)
+        Fop.title("Agregando Trinángulo")
+        Fra = tkinter.Frame(Fop,bg= "light blue")
+        Fra.place(height=100,width=500)
+
+        etiquetafinicia = tkinter.Label(Fra,text="FILA")
+        etiquetafinicia.place(x= 10, y=10)
+        filainicia = tkinter.Entry(Fra)
+        filainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="COLUMNA")
+        etiquetafinicia.place(x= 140, y=10)
+        columnainicia = tkinter.Entry(Fra)
+        columnainicia.pack(side="left")
+
+        etiquetafinicia = tkinter.Label(Fra,text="LONGITUD")
+        etiquetafinicia.place(x= 260, y=10)
+        filatermina = tkinter.Entry(Fra)
+        filatermina.pack(side="left")
+
+
+        bAceptar = tkinter.Button(Fra,text="Aceptar",bg="light green", command=lambda:limpiarz(filainicia.get(),columnainicia.get(),filatermina.get(),0,Fop))
+        bAceptar.place(x=180,y=70)
 
     
 
 def limpiarz(fi,ci,ft,ct,Frame):
-    global nombre_m_1,Matrices_Mod, operacion
+    global nombre_m_1,Matrices_Mod, operacion, Reportes, contador_repo
+    global Matrices
     print(nombre_m_1)
     if operacion == 4:
         if fi < ft and ci < ct:
@@ -618,20 +704,36 @@ def limpiarz(fi,ci,ft,ct,Frame):
                 image1 = Image.open("Resultado.png")
                 photo = ImageTk.PhotoImage(image1)
                 reducida = image1.resize((150,150))
-                reducida.save("Reducidaredux.png")
-                image2 = Image.open("Reducidaredux.png")
+                reducida.save("Resultado.png")
+                image2 = Image.open("Resultado.png")
                 photo = ImageTk.PhotoImage(image2)
                 label = tkinter.Label(F1,image=photo)
                 label.img = photo
                 label.place(x=250,y=50)
                 label = tkinter.Label(F1,text="Resultado de Limpiar Zona",bg="light blue")
                 label.place(x=250,y=230)
+                today = date.today()
+                now = datetime.now()
+                x = now.time()
+                Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Limpiar Zona -- Matriz usada:"+nombre_m_1)
+                contador_repo += 1
+                Matrices_Mod = None
                 Matrices_Mod = Matrices
                 
                 Frame.destroy()
             else:
+                today = date.today()
+                now = datetime.now()
+                x = now.time()
+                Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Error: Algún dato mayor que los bordes de la matriz -- Limpiar Zona -- Matriz usada:"+nombre_m_1)
+                contador_repo += 1
                 messagebox.WARNING(message= "Algun dato es mayor que los bordes de la matriz")        
         else:
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Error: Las filas o columnas finales son menores a las iniciales -- Limpiar Zona -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
             messagebox.WARNING(message= "Las filas o las columnas finales son menores a las iniciales")
     elif operacion == 5:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
@@ -676,18 +778,29 @@ def limpiarz(fi,ci,ft,ct,Frame):
             image1 = Image.open("Resultado.png")
             photo = ImageTk.PhotoImage(image1)
             reducida = image1.resize((150,150))
-            reducida.save("Reducidaredux.png")
-            image2 = Image.open("Reducidaredux.png")
+            reducida.save("Resultado.png")
+            image2 = Image.open("Resultado.png")
             photo = ImageTk.PhotoImage(image2)
             label = tkinter.Label(F1,image=photo)
             label.img = photo
             label.place(x=250,y=50)
             label = tkinter.Label(F1,text="Resultado de Agregar Horizontalmente",bg="light blue")
             label.place(x=250,y=230)
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Horizontalmente -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
+            Matrices_Mod = None
             Matrices_Mod = Matrices
             
             Frame.destroy()
         else:
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Error: El nodo desde el que se quiere empezar no existe -- Agregar Horizontalmente -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
             messagebox.WARNING(message= "El nodo desde el que quiere iniciar no existe")    
     elif operacion == 6:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
@@ -732,19 +845,161 @@ def limpiarz(fi,ci,ft,ct,Frame):
             image1 = Image.open("Resultado.png")
             photo = ImageTk.PhotoImage(image1)
             reducida = image1.resize((150,150))
-            reducida.save("Reducidaredux.png")
-            image2 = Image.open("Reducidaredux.png")
+            reducida.save("Resultado.png")
+            image2 = Image.open("Resultado.png")
             photo = ImageTk.PhotoImage(image2)
             label = tkinter.Label(F1,image=photo)
             label.img = photo
             label.place(x=250,y=50)
             label = tkinter.Label(F1,text="Resultado de Agregar Verticalmente",bg="light blue")
             label.place(x=250,y=230)
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Verticalmente -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
+            Matrices_Mod = None
             Matrices_Mod = Matrices
             
             Frame.destroy()
         else:
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Error: El nodo desde el que se quiere empezar no existe -- Agregar Verticalmente -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
             messagebox.WARNING(message= "El nodo desde el que quiere iniciar no existe")        
+    elif operacion == 7:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        if actual.filas > int(fi) and actual.columnas > int(ci):
+            fi = int(fi)
+            ci = int(ci)
+            ft = int(ft)
+            ct = int(ct)
+            actual.recorrerColumnas()
+            actual.cuadro(fi, ci, ft,ct)
+            actual.recorrerFilas()
+            a = ""
+            a = actual.obtenervaloresporfilas(a)
+            a = a.strip()
+            print(a)
+            x = 0
+            mensaje = '''digraph grafica{\n
+            tbl [\n
+            shape=plaintext\n
+            label=<\n
+            <table border="0" cellborder = "0" cellspacing="0">\n'''
+            mensaje += "<tr>"
+            file = open("Resultado.dot","w")
+            while x < len(a):
+                char = a[x]
+                if char == "*":
+                    mensaje += "<td bgcolor=\"black\">     </td>"
+                elif char == "-":
+                    mensaje += "<td>    </td>"
+                elif a[x+1] == None:
+                    break  
+                elif char == "\n":
+                    mensaje += "</tr>\n<tr>"
+                x += 1
+            mensaje += '''</tr></table>
+                        >];
+                    }'''    
+            file.write(mensaje)
+            file.close()
+            os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+            mensaje = ""
+            image1 = Image.open("Resultado.png")
+            photo = ImageTk.PhotoImage(image1)
+            reducida = image1.resize((150,150))
+            reducida.save("Resultado.png")
+            image2 = Image.open("Resultado.png")
+            photo = ImageTk.PhotoImage(image2)
+            label = tkinter.Label(F1,image=photo)
+            label.img = photo
+            label.place(x=250,y=50)
+            label = tkinter.Label(F1,text="Resultado de Agregar Cuadro",bg="light blue")
+            label.place(x=250,y=230)
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Cuadro -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
+            Matrices_Mod = None
+            Matrices_Mod = Matrices
+            
+            Frame.destroy() 
+        
+    elif operacion == 8:
+        actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
+        if actual.filas > int(fi) and actual.columnas > int(ci):
+            fi = int(fi)
+            ci = int(ci)
+            ft = int(ft)
+            ct = int(ct)
+            actual.recorrerColumnas()
+            actual.triangulo(fi,ci,ft)
+            actual.recorrerFilas()
+            a = ""
+            a = actual.obtenervaloresporfilas(a)
+            a = a.strip()
+            print(a)
+            x = 0 
+            mensaje = '''digraph grafica{\n
+            tbl [\n
+            shape=plaintext\n
+            label=<\n
+            <table border="0" cellborder = "0" cellspacing="0">\n'''
+            mensaje += "<tr>"
+            file = open("Resultado.dot","w")
+            while x < len(a):
+                char = a[x]
+                if char == "*":
+                    mensaje += "<td bgcolor=\"black\">     </td>"
+                elif char == "-":
+                    mensaje += "<td>    </td>"
+                elif a[x+1] == None:
+                    break  
+                elif char == "\n":
+                    mensaje += "</tr>\n<tr>"
+                x += 1
+            mensaje += '''</tr></table>
+                        >];
+                    }'''    
+            file.write(mensaje)
+            file.close()
+            os.system('dot -Tjpg Resultado.dot -o Resultado.png')
+            mensaje = ""
+            image1 = Image.open("Resultado.png")
+            photo = ImageTk.PhotoImage(image1)
+            reducida = image1.resize((150,150))
+            reducida.save("Resultado.png")
+            image2 = Image.open("Resultado.png")
+            photo = ImageTk.PhotoImage(image2)
+            label = tkinter.Label(F1,image=photo)
+            label.img = photo
+            label.place(x=250,y=50)
+            label = tkinter.Label(F1,text="Resultado de Agregar Triángulo",bg="light blue")
+            label.place(x=250,y=230)
+            today = date.today()
+            now = datetime.now()
+            x = now.time()
+            Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Triángulo -- Matriz usada:"+nombre_m_1)
+            contador_repo += 1
+            Matrices_Mod = copy.copy(Matrices)
+
+            #Matrices_Mod = None
+            #n = Matrices
+            #Matrices_Mod = n
+            #Matrices_Mod = Matrices
+            
+            y = Matrices.getNodoMatriz(nombre_m_1)
+            print("PPPPPPPPPPPPPPPPPPPPPMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm")
+            y.recorrerFilas()
+            
+
+            Frame.destroy() 
+        
 
 def operacionesd():
     global raiz, F1, operacion, Matrices, nombres
@@ -797,7 +1052,7 @@ def operacionesd():
     Fra.mainloop()
 
 def despues_operaciones2d(Frame, combo1, combo2):
-    global operacion, nombre_m_1, nombre_m_2,Matrices_Mod, Matrices
+    global operacion, nombre_m_1, nombre_m_2,Matrices_Mod, Matrices, Reportes, contador_repo
     global F1
     nombre_m_1 = combo1.get()
     nombre_m_2 = combo2.get()
@@ -806,8 +1061,8 @@ def despues_operaciones2d(Frame, combo1, combo2):
     image1 = Image.open(nombre_m_1+".png")
     photo = ImageTk.PhotoImage(image1)
     reducida = image1.resize((150,150))
-    reducida.save(nombre_m_1+"redux.png")
-    image2 = Image.open(nombre_m_1+"redux.png")
+    reducida.save(nombre_m_1+".png")
+    image2 = Image.open(nombre_m_1+".png")
     photo = ImageTk.PhotoImage(image2)
     label = tkinter.Label(F1,image=photo)
     label.img = photo
@@ -818,8 +1073,8 @@ def despues_operaciones2d(Frame, combo1, combo2):
     image1 = Image.open(nombre_m_2+".png")
     photo = ImageTk.PhotoImage(image1)
     reducida = image1.resize((150,150))
-    reducida.save(nombre_m_2+"redux.png")
-    image2 = Image.open(nombre_m_2+"redux.png")
+    reducida.save(nombre_m_2+".png")
+    image2 = Image.open(nombre_m_2+".png")
     photo = ImageTk.PhotoImage(image2)
     label = tkinter.Label(F1,image=photo)
     label.img = photo
@@ -876,15 +1131,20 @@ def despues_operaciones2d(Frame, combo1, combo2):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=190,y=280)
         label = tkinter.Label(F1,text="Resultado de Union entre ambas matrices",bg="light blue")
         label.place(x=210,y=450)
-        Matrices_Mod = Matrices
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Unión -- Matrices usadas:"+nombre_m_1+","+ nombre_m_2)
+        contador_repo += 1
+        #Matrices_Mod = Matrices
         
         Frame.destroy()
         
@@ -938,15 +1198,20 @@ def despues_operaciones2d(Frame, combo1, combo2):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=190,y=280)
         label = tkinter.Label(F1,text="Resultado de Intersección entre ambas matrices",bg="light blue")
         label.place(x=210,y=450)
-        Matrices_Mod = Matrices
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Intersección -- Matrices usadas:"+nombre_m_1+","+ nombre_m_2)
+        contador_repo += 1
+        #Matrices_Mod = Matrices
         
         Frame.destroy()
     elif operacion == 11:
@@ -998,15 +1263,20 @@ def despues_operaciones2d(Frame, combo1, combo2):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=190,y=280)
         label = tkinter.Label(F1,text="Resultado de Diferencia entre ambas matrices",bg="light blue")
         label.place(x=210,y=450)
-        Matrices_Mod = Matrices
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Diferencia -- Matrices usadas:"+nombre_m_1+","+ nombre_m_2)
+        contador_repo += 1
+        #Matrices_Mod = Matrices
         
         Frame.destroy()
     elif operacion == 12:
@@ -1058,41 +1328,115 @@ def despues_operaciones2d(Frame, combo1, combo2):
         image1 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image1)
         reducida = image1.resize((150,150))
-        reducida.save("Reducidaredux.png")
-        image2 = Image.open("Reducidaredux.png")
+        reducida.save("Resultado.png")
+        image2 = Image.open("Resultado.png")
         photo = ImageTk.PhotoImage(image2)
         label = tkinter.Label(F1,image=photo)
         label.img = photo
         label.place(x=190,y=280)
         label = tkinter.Label(F1,text="Resultado de Diferencia Simétrica entre ambas matrices",bg="light blue")
         label.place(x=210,y=450)
-        Matrices_Mod = Matrices
-        
+        today = date.today()
+        now = datetime.now()
+        x = now.time()
+        Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Intersección -- Matrices usadas:"+nombre_m_1+","+ nombre_m_2)
+        contador_repo += 1
+        #Matrices_Mod = Matrices
         Frame.destroy()
     
+def reportes():
+    global contador_repo, Reportes
+    if Reportes is not None:
+        mensaje = """<html>
+        <head>
+        
+        <style>
+        table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        }
+        th, td {
+        padding: 5px;
+        text-align: left;    
+        }
+        body {
+            color: black;
+            background-color: lightgreen;
+        }
+        div {
+            padding: 8px 20px;
+            margin: 54px -2px;
+            box-shadow: none!important;
+            border: solid blue;
+            
+        }
+        table {
+            padding: 30px;
+        }
+        table, th, td, tbody, thead {
+        border: 0px;
+        border-collapse: collapse;
+        }
+        th, td {
+        padding: 5px;
+        text-align: left;    
+        }
+        </style>
+        <title>Proyecto 2 [IPC2]</title>
+        </head>
+        
+        <body><h1 style="color:black"><center>Proyecto 2 Introducción a la Programación y Computación 2 (D)</center></h1>
+            <h1 style = \"color:red\"><center> Reporte de Actividades</center></h1>
+        """
+        a = ""
+        a = Reportes.obtenerdatos(a)
+        x = 0
+        individual = ""
+        while x < len(a):
+            char = a[x]
+            if char == "\n":
+                print("SALTO DE LINEA")
+                mensaje += "<h2 style=\"color:black\">"+individual+"</h2>"
+                print(individual)
+                individual = ""
+            else:
+                individual += char
+            x += 1
 
 
+        print(a)
+        mensaje += """</body>
+        </html>"""
+        f = open('[IPC2]Reportes.html','w',encoding='utf-8')
+        f.write(mensaje)
+        f.close()
+        webbrowser.open_new_tab('[IPC2]Reportes.html')
+        
+    else:
+        print("ESTA VACIA LA LISTA")
+        pass
 
 
+    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def ayuda(a):
+    global raiz, F1
+    if a == 0:
+        inicio()
+        byo = tkinter.Button(F1, text="Información del Creador",bg= "light green", command=lambda:ayuda(1))
+        byo.place(x=60,y=150)
+        bensayo = tkinter.Button(F1, text="Desplegar Documentación del Programa",bg= "light green", command=lambda:os.startfile("Ensayo_Proyecto2[IPC2].pdf"))
+        bensayo.place(x=300,y=150)
+        
+    else:
+        label = tkinter.Label(F1,text="NOMBRE: OSCAR DANIEL OLIVA ESPAÑA",bg="light blue")
+        label.place(x=30,y=250)
+        label = tkinter.Label(F1,text="CARNÉT: 201902663",bg="light blue")
+        label.place(x=30,y=300)
+        label = tkinter.Label(F1,text="FACULTAD: INGENIERÍA EN CIENCIAS Y SISTEMAS",bg="light blue")
+        label.place(x=30,y=350)
+        label = tkinter.Label(F1,text="SEMESTRE: 4to.",bg="light blue")
+        label.place(x=30,y=400)
 
 
 
@@ -1129,23 +1473,19 @@ b3F1 = tkinter.Button(F1, text= "Operaciones Duales", bg= "light green", command
 b3F1.place(x=245,y=10)
 b4F1 = tkinter.Button(F1, text= "Reportes", bg= "light green", command=inicio,width=14)
 b4F1.place(x=395,y=10)
-b5F1 = tkinter.Button(F1, text= "Ayuda", bg= "light green", command=inicio,width=14)
+b5F1 = tkinter.Button(F1, text= "Ayuda", bg= "light green", command=lambda:ayuda(0),width=13)
 b5F1.place(x=503,y=10)
 
+image2 = Image.open("b123asurero.png")
+photo = ImageTk.PhotoImage(image2)
+
+b6F1 = tkinter.Button(F1, image=photo, bg= "light green", command=inicio,width=14)
+b6F1.img = photo
+b6F1.place(x=605,y=10)
 
 label1 = ttk.Label(F1,text="Ruta")
 label1.place(x=2,y=50)
 label1 = ttk.Label(F1,text="No ha ingresado ninguna matriz")
 label1.place(x=50,y=50)
-#b2F1 = tkinter.Button(F1, text= "Y", bg= "light blue")
-#b2F1.place(x=2,y=0)
-#barra = tkinter.Scrollbar(F1)
-#barra.pack(side="right",fill="y")
-
-
 
 raiz.mainloop()
-
-
-                            
-    
