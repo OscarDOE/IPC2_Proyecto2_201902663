@@ -15,6 +15,7 @@ import time
 import webbrowser
 from matriz import matriz
 from copy import deepcopy
+import copy
 
 Matrices = ListaMatrices()
 Matrices_Mod = ListaMatrices()
@@ -375,7 +376,7 @@ def despues_operaciones2(Frame, combo):
         x = now.time()
         Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Rotación Horizontal -- Matriz usada:"+nombre_m_1)
         contador_repo += 1
-        Matrices_Mod = Matrices
+        Matrices_Mod = copy.deepcopy(Matrices)
     elif operacion == 2:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
         actual.Vertical()
@@ -445,7 +446,7 @@ def despues_operaciones2(Frame, combo):
         x = now.time()
         Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Rotación Vertical -- Matriz usada:"+nombre_m_1)
         contador_repo += 1
-        Matrices_Mod = Matrices
+        Matrices_Mod = copy.deepcopy(Matrices)
     elif operacion == 3:
         actual = Matrices_Mod.getNodoMatriz(nombre_m_1)
         #actual.Vertical()
@@ -512,7 +513,7 @@ def despues_operaciones2(Frame, combo):
         x = now.time()
         Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Transpuesta -- Matriz usada:"+nombre_m_1)
         contador_repo += 1
-        Matrices_Mod = Matrices
+        Matrices_Mod = copy.deepcopy(Matrices)
     elif operacion == 4:
         Fop = tkinter.Tk()
         Fop.geometry("500x100")
@@ -718,7 +719,7 @@ def limpiarz(fi,ci,ft,ct,Frame):
                 Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Limpiar Zona -- Matriz usada:"+nombre_m_1)
                 contador_repo += 1
                 Matrices_Mod = None
-                Matrices_Mod = Matrices
+                Matrices_Mod = copy.deepcopy(Matrices)
                 
                 Frame.destroy()
             else:
@@ -792,7 +793,7 @@ def limpiarz(fi,ci,ft,ct,Frame):
             Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Horizontalmente -- Matriz usada:"+nombre_m_1)
             contador_repo += 1
             Matrices_Mod = None
-            Matrices_Mod = Matrices
+            Matrices_Mod = copy.deepcopy(Matrices)
             
             Frame.destroy()
         else:
@@ -859,7 +860,7 @@ def limpiarz(fi,ci,ft,ct,Frame):
             Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Verticalmente -- Matriz usada:"+nombre_m_1)
             contador_repo += 1
             Matrices_Mod = None
-            Matrices_Mod = Matrices
+            Matrices_Mod = copy.deepcopy(Matrices)
             
             Frame.destroy()
         else:
@@ -926,7 +927,7 @@ def limpiarz(fi,ci,ft,ct,Frame):
             Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Cuadro -- Matriz usada:"+nombre_m_1)
             contador_repo += 1
             Matrices_Mod = None
-            Matrices_Mod = Matrices
+            Matrices_Mod = copy.deepcopy(Matrices)
             
             Frame.destroy() 
         
@@ -986,17 +987,7 @@ def limpiarz(fi,ci,ft,ct,Frame):
             x = now.time()
             Reportes.insertar(contador_repo, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+" Agregar Triángulo -- Matriz usada:"+nombre_m_1)
             contador_repo += 1
-            Matrices_Mod = copy.copy(Matrices)
-
-            #Matrices_Mod = None
-            #n = Matrices
-            #Matrices_Mod = n
-            #Matrices_Mod = Matrices
-            
-            y = Matrices.getNodoMatriz(nombre_m_1)
-            print("PPPPPPPPPPPPPPPPPPPPPMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm")
-            y.recorrerFilas()
-            
+            Matrices_Mod = copy.deepcopy(Matrices)            
 
             Frame.destroy() 
         
