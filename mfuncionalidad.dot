@@ -1,0 +1,111 @@
+digraph Sparce_Matrix {
+
+    node [shape=box]
+
+    /* este es el nodo principal y lo pones en el grupo 1 para que se muestre como el origen de un todo */
+    Mt[ label = "Matrix", width = 1.5, style = filled, fillcolor = firebrick1, group = 1 ];
+
+    /* esto no se elimina, es para evitar el posicionamiento a lo loco */
+    e0[ shape = point, width = 0 ];
+    e1[ shape = point, width = 0 ];
+
+
+    
+    /* estos son los padres de cada fila, mira que es grupo 1 */ 
+    U0 [label = "Estructuras"    pos = "5.3,3.5!" width = 1.5 style = filled, fillcolor = bisque1, group = 1 ];
+    U1 [label = "Redes"          width = 1.5 style = filled, fillcolor = bisque1, group = 1 ];
+    U2 [label = "Compiladores"   width = 1.5 style = filled, fillcolor = bisque1, group = 1 ];
+    U3 [label = "Investigacion"  width = 1.5 style = filled, fillcolor = bisque1, group = 1 ];
+    U4 [label = "Lenguajes"      width = 1.5 style = filled, fillcolor = bisque1, group = 1 ];
+
+    //relaciones
+    U0 -> U1;
+    U1 -> U0;
+    U1 -> U2;
+    U2 -> U1;
+    U2 -> U4;
+    #U3 -> U2;
+    #U3 -> U4;
+    U4 -> U2;
+
+    
+    /* aca el grupo cambia por ser las cabeceras de las columnas */
+    A0 [label = "Josefina"   width = 1.5 style = filled, fillcolor = lightskyblue, group = 2 ];
+    A1 [label = "Alejandro"  width = 1.5 style = filled, fillcolor = lightskyblue, group = 3 ];
+    A2 [label = "Marco"      width = 1.5 style = filled, fillcolor = lightskyblue, group = 4 ];
+    A3 [label = "Julian"     width = 1.5 style = filled, fillcolor = lightskyblue, group = 5 ];
+    A4 [label = "Pamela"     width = 1.5 style = filled, fillcolor = lightskyblue, group = 6 ];
+
+    //relaciones
+    A0 -> A1;
+    A1 -> A0;
+    A1 -> A2;
+    A2 -> A1;
+    A2 -> A3;
+    A3 -> A2;
+    A3 -> A4;
+    A4 -> A3;
+
+    Mt -> U0;
+    Mt -> A0;
+
+    { rank = same; Mt; A0; A1; A2; A3; A4; }//para que aparezacan en la misma direccion
+
+    
+    /* los nodos del centro, acuerdate de los grupos */
+    N0_L0 [label = "Jose-Estr" width = 1.5, group = 2 ];
+    N1_L0 [label = "Marc-Estr" width = 1.5, group = 4 ];
+    N2_L0 [label = "Juli-Estr" width = 1.5, group = 5 ];
+
+   
+    N0_L2 [label = "Marc-Comp" width = 1.5, group = 4 ];
+    N1_L2 [label = "Juli-Comp" width = 1.5, group = 5 ];
+
+    
+    N0_L4 [label = "Marc-Leng" width = 1.5, group = 4 ];
+    N1_L4 [label = "Juli-Leng" width = 1.5, group = 5 ];
+    N2_L4 [label = "Pame-Leng" width = 1.5, group = 6 ];
+
+
+    //relaciones y ranks, no olvides que deben ir en la misma direccion    
+
+    U0 -> N0_L0;
+    A0 -> N0_L0;
+    N0_L0 -> N1_L0;
+    N1_L0 -> N0_L0;
+    A2 -> N1_L0;
+    N1_L0 -> N2_L0;
+    N2_L0 -> N1_L0;
+    A3 -> N2_L0;
+
+    { rank = same; U0; N0_L0;N1_L0;N2_L0; }
+    
+
+    U2 -> N0_L2;
+    N0_L2 ->N1_L0;
+    N1_L0 ->N0_L2;
+    N0_L2 -> N1_L2;
+    N1_L2 -> N0_L2;
+    N1_L2 ->N2_L0;
+    N2_L0 ->N1_L2;
+
+    { rank = same; U2; N0_L2;N1_L2; }
+    
+
+    U4 -> N0_L4;
+    N0_L4 -> N0_L2;
+    N0_L2 -> N0_L4;
+    N0_L4 -> N1_L4;
+    N1_L4 -> N0_L4;
+    N1_L4 -> N1_L2;
+    N1_L2 -> N1_L4;
+    N1_L4 -> N2_L4;
+    N2_L4 -> N1_L4;
+
+    { rank = same; U4; N0_L4;N1_L4;N2_L4; }
+
+    /* para que aparezca la flecha del ultimo */
+    
+    A4 -> e0 -> e1[ dir = none ];
+    e1 -> N2_L4;
+}

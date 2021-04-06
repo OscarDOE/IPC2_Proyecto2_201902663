@@ -20,12 +20,14 @@ import copy
 Matrices = ListaMatrices()
 Matrices_Mod = ListaMatrices()
 Reportes = ListaReportes()
+Reporte_Matrices = ListaReportes()
 contador_repo = 1
+contador_matrices = 1
 ruta = ""
 valores = []
 def cargar_archivo():
     global ruta, valores, nombres
-    global Matrices
+    global Matrices, Reporte_Matrices, contador_matrices
     root = Tk()
     root.withdraw()
     root.update()
@@ -100,11 +102,17 @@ def cargar_archivo():
                 d = c.strip()
                 #label1 = ttk.Label(F1,text= " Imagen:").place(x=2,y=posiciony)
                 salto_linea = 0
+                llenos = 0
+                vacios = 0
                 for i in sub.text:
                     if i == "*" or i == "-":
                         a+=i
                         ameter.insertar(filai, columnai, str(i))
                         ameter_Mod.insertar(filai, columnai, str(i))
+                        if i == "*":
+                            llenos += 1
+                        elif i == "-":
+                            vacios += 1
                         #print("Valor:", i)
                         columnai += 1
                     elif i == "\n":
@@ -165,6 +173,13 @@ def cargar_archivo():
                 mensaje += '''</table>
                     >];
                 }'''
+                today = date.today()
+                now = datetime.now()
+                x = now.time()
+                Reporte_Matrices.insertar(contador_matrices, str(today)+"---"+str(now.hour)+":"+str(now.minute)+":"+str(now.second)+str(nombre_actual)+"- Espacios llenos:" +str(llenos)+" -  Espacios Vacios: "+str(vacios))
+                llenos = 0
+                vacios = 0  
+                contador_matrices += 1
                 #ameter.recorrerFilas()
                 #print("TAMAÑO A:",len(a))
                 sumando = filas_actual*15
@@ -1336,7 +1351,7 @@ def despues_operaciones2d(Frame, combo1, combo2):
         Frame.destroy()
     
 def reportes():
-    global contador_repo, Reportes
+    global contador_repo, Reportes, Reporte_Matrices
     if Reportes is not None:
         mensaje = """<html>
         <head>
@@ -1378,7 +1393,25 @@ def reportes():
         
         <body><h1 style="color:black"><center>Proyecto 2 Introducción a la Programación y Computación 2 (D)</center></h1>
             <h1 style = \"color:red\"><center> Reporte de Actividades</center></h1>
+            <h3 style = \"color:red\"><center> Matrices </center></h1>
         """
+        a = ""
+        a = Reporte_Matrices.obtenerdatos(a)
+        x = 0
+        individual = ""
+        while x < len(a):
+            char = a[x]
+            if char == "\n":
+                print("SALTO DE LINEA")
+                mensaje += "<h2 style=\"color:black\">"+individual+"</h2>"
+                print(individual)
+                individual = ""
+            else:
+                individual += char
+            x += 1
+
+        mensaje += "   <h3 style = \"color:red\"><center> Operaciones </center></h1>"
+
         a = ""
         a = Reportes.obtenerdatos(a)
         x = 0
@@ -1393,6 +1426,7 @@ def reportes():
             else:
                 individual += char
             x += 1
+
 
 
         print(a)
